@@ -1,5 +1,5 @@
-import { Assistant } from "@/components/assistant";
-import { ThemeSwitcher } from "@/components/theme-switcher";
+import { Assistant } from "@/components/assistant/assistant";
+import { ThemeSwitcher } from "@/components/theme/theme-switcher";
 
 export default function Home() {
   return (
