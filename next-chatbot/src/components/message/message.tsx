@@ -17,15 +17,13 @@ export function Message({ message: { content, created_at, role } }: Props) {
   return (
     <Card>
       <CardHeader>
-        <CardTitle>{role}</CardTitle>
-        <CardDescription></CardDescription>
+        <CardDescription>
+          {role} {format(created_at, 'dd.MM.yyyy HH:mm:ss')}
+        </CardDescription>
       </CardHeader>
       <CardContent>
         <p>{content}</p>
       </CardContent>
-      <CardFooter>
-        <p>{format(created_at, 'dd.mm.yyyy HH:mm:ss')}</p>
-      </CardFooter>
     </Card>
   );
 }

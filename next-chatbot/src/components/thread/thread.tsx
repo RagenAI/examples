@@ -27,7 +27,7 @@ export function Thread({ thread: { id, created_at, source, title } }: Props) {
         </CardTitle>
         <CardDescription>
           Source: {source}, Created at:{' '}
-          {format(created_at, 'dd.mm.yyyy HH:mm:ss')}
+          {format(created_at, 'dd.MM.yyyy HH:mm:ss')}
         </CardDescription>
       </CardHeader>
     </Card>
