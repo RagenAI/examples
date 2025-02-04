@@ -1,3 +1,13 @@
+This is Next.js example application working with Ragen API. In your [Ragen App](https://app.ragen.ai) settings create a new key
+
+Create `.env.local` file and create new env:
+
+```bash
+RAGEN_API_KEY=YOUR_KEY_HERE
+```
+
+
+
 This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
 
 ## Getting Started
