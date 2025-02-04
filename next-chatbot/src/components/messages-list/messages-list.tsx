@@ -1,12 +1,16 @@
-import { Message } from "../message/message";
+import { MessageDto } from '@/lib/types';
+import { Message } from '../message';
 
-export function MessagesList() {
+type Props = {
+  data: MessageDto[];
+};
+
+export function MessagesList({ data }: Props) {
   return (
     <div className="flex flex-col space-y-4 overflow-y-auto">
-      <Message />
-      <Message />
-      <Message />
-      <Message />
+      {data.map((elem) => (
+        <Message key={elem.id} content={elem.content} />
+      ))}
     </div>
   );
 }
