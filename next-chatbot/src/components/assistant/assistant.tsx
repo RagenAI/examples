@@ -1,12 +1,11 @@
 'use client';
 
-import { useEffect, useId, useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { v4 as uuidv4 } from 'uuid';
 
 import { MessagesList } from '../messages-list/messages-list';
 import { QuestionForm } from '../question-form/question-form';
-import { CreateMessageDto, MessageDto, MessageRole } from '@/lib/types';
-import { createMessageAction } from './actions';
+import { ChatMessageDto, MessageDto, MessageRole } from '@/lib/types';
 
 type Props = {
   threadId: string;
@@ -19,22 +18,18 @@ export function Assistant({ threadId, messages }: Props) {
   const messagesEndDivRef = useRef<HTMLDivElement>(null);
 
   const connectToStream = () => {
-    // const url = '';
+    const eventSource = new EventSource(`/api/chat`);
 
-    const eventSource = new EventSource('/api/chat');
-
-    // init
-    // message
-    // close
+    eventSource.addEventListener('message', (event) => {
+      const eventMessage = JSON.parse(event.data);
+      console.log('Received chunk:', eventMessage);
+      // FIXME: message format
+      // setChatMessages((prevMessages) => [...prevMessages, eventMessage.payload]);
+      scrollToBottom();
+    });
 
     eventSource.addEventListener('init', () => {
       console.log('init');
-    });
-
-    eventSource.addEventListener('message', () => {
-      // const eventMessage = JSON.parse(event.data);
-      // console.log('eventMessage', eventMessage.type, eventMessage.payload);
-      // setChatMessages((prevMessages) => [eventMessage.payload]);
     });
 
     eventSource.addEventListener('close', () => {
@@ -61,9 +56,8 @@ export function Assistant({ threadId, messages }: Props) {
   const scrollToBottom = () =>
     messagesEndDivRef.current?.scrollIntoView({ behavior: 'smooth' });
 
-  const handleCreateMessage = async (data: CreateMessageDto) => {
+  const handleCreateMessage = async (data: ChatMessageDto) => {
     setIsLoading(true);
-    // this can be returned from API, simulate user message
     const userMessage: MessageDto = {
       id: uuidv4(),
       content: data.content,
@@ -73,12 +67,18 @@ export function Assistant({ threadId, messages }: Props) {
     setChatMessages((prevMessages) => [...prevMessages, userMessage]);
     scrollToBottom();
 
-    const message = await createMessageAction(threadId, data);
-    if (message) {
-      console.log({ message });
-      setChatMessages((prevMessages) => [...prevMessages, message]);
-      scrollToBottom();
-    }
+    // this is sync operation - send message and wait for chat response
+    // const message = await createMessageAction(threadId, data);
+    // if (message) {
+    //   console.log({ message });
+    //   setChatMessages((prevMessages) => [...prevMessages, message]);
+    //   scrollToBottom();
+    // }
+
+    fetch(`/api/chat/${threadId}`, {method: 'POST', body: JSON.stringify(data)})
+    .then(response => response.body)
+    .then()
+
     setIsLoading(false);
   };
 

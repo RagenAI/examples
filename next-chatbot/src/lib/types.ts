@@ -1,3 +1,5 @@
+import { z } from 'zod';
+
 export type ServerAction<T> =
   | {
       success: true;
@@ -33,6 +35,22 @@ export type MessageDto = {
   created_at: string;
 };
 
-export type CreateMessageDto = {
+
+export const chatMessageSchema = z.object({
+  content: z.string().min(3).max(50),
+});
+
+export type ChatMessageDto = z.infer<typeof chatMessageSchema>;
+
+export type ApiEvent = 'init' | 'delta' | 'message' | 'end';
+
+export type ApiMessageEvent = {
+  id: string;
+  content: string;
+  role: MessageRole;
+  created_at: string;
+};
+
+export type ApiDeltaEvent = {
   content: string;
 };

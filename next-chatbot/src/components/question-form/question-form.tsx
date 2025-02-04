@@ -17,10 +17,10 @@ import {
   FormLabel,
   FormMessage,
 } from '@/components/ui/form';
-import { CreateMessageDto } from '@/lib/types';
+import { ChatMessageDto } from '@/lib/types';
 
 type Props = {
-  onSubmit: (data: CreateMessageDto) => void;
+  onSubmit: (data: ChatMessageDto) => void;
 };
 
 export function QuestionForm({ onSubmit }: Props) {

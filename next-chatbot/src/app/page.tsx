@@ -4,7 +4,7 @@ import Link from 'next/link';
 
 export default async function HomePage() {
   const threads = await getAllThreads();
-  console.log({ threads });
+
   if (!threads) {
     return (
       <div className="mx-4">

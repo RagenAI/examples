@@ -1,6 +1,6 @@
 import { api } from './api';
 import { logger } from './logger';
-import { CreateThreadDto, MessageDto, ThreadDto } from './types';
+import { ChatMessageDto, CreateThreadDto, MessageDto, ThreadDto } from './types';
 
 export const createThread = async () => {
   try {
@@ -31,3 +31,28 @@ export const getThreadMessages = async (id: ThreadDto['id']) => {
     return [];
   }
 };
+
+export const getMessageStream = async (id: ThreadDto['id'], data: ChatMessageDto) => {
+  // fetch version:
+  // const apiStream = await fetch(
+  //   `https://api.ragen.io/v1/chat/${threadId}/stream`,
+  //   {
+  //     method: 'POST',
+  //     headers: {
+  //       'Content-Type': 'text/event-stream',
+  //       'x-api-key': process.env.RAGEN_API_KEY,
+  //     },
+  //     body: JSON.stringify(data),
+  //   }
+  // );
+
+  try {
+    const result = await api.post(`/chat/${id}/stream`, data, {
+      responseType: 'stream'
+    });
+    return result.data;
+  } catch (err) {
+    logger.error({ err }, 'Cannot get thread messages');
+    return [];
+  }
+}
