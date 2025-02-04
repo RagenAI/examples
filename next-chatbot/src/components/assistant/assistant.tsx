@@ -5,7 +5,9 @@ import { v4 as uuidv4 } from 'uuid';
 
 import { MessagesList } from '../messages-list/messages-list';
 import { QuestionForm } from '../question-form/question-form';
-import { ChatMessageDto, MessageDto, MessageRole } from '@/lib/types';
+import { ApiEvent, ChatMessageDto, MessageDto, MessageRole } from '@/lib/types';
+import { parseSseString } from '@/lib/sse';
+
 
 type Props = {
   threadId: string;
@@ -17,40 +19,8 @@ export function Assistant({ threadId, messages }: Props) {
   const [chatMessages, setChatMessages] = useState<MessageDto[]>(messages);
   const messagesEndDivRef = useRef<HTMLDivElement>(null);
 
-  const connectToStream = () => {
-    const eventSource = new EventSource(`/api/chat`);
-
-    eventSource.addEventListener('message', (event) => {
-      const eventMessage = JSON.parse(event.data);
-      console.log('Received chunk:', eventMessage);
-      // FIXME: message format
-      // setChatMessages((prevMessages) => [...prevMessages, eventMessage.payload]);
-      scrollToBottom();
-    });
-
-    eventSource.addEventListener('init', () => {
-      console.log('init');
-    });
-
-    eventSource.addEventListener('close', () => {
-      eventSource.close();
-    });
-
-    eventSource.addEventListener('error', () => {
-      eventSource.close();
-    });
-
-    return eventSource;
-  };
-
   useEffect(() => {
     scrollToBottom();
-
-    const stream = connectToStream();
-
-    return () => {
-      stream.close();
-    };
   }, []);
 
   const scrollToBottom = () =>
@@ -75,9 +45,32 @@ export function Assistant({ threadId, messages }: Props) {
     //   scrollToBottom();
     // }
 
-    fetch(`/api/chat/${threadId}`, {method: 'POST', body: JSON.stringify(data)})
-    .then(response => response.body)
-    .then()
+    const apiStream = await fetch(
+    `/api/chat/${threadId}`,
+    {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'text/event-stream',
+      },
+      body: JSON.stringify(data),
+    }
+  );
+  if (!apiStream.body) {
+    return;
+  }
+
+  const reader = apiStream.body
+    .pipeThrough(new TextDecoderStream())
+    .getReader();
+
+    // Read the stream
+    while (true) {
+      const { done, value } = await reader.read();
+      if (done) break; // Exit the loop if the stream is done
+
+      // Process the value (which is a string)
+      console.log(value); // You can handle the value as needed
+    }
 
     setIsLoading(false);
   };

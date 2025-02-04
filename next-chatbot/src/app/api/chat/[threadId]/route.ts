@@ -1,34 +1,10 @@
 import { NextRequest } from 'next/server';
 
 import { getMessageStream } from '@/lib/services';
-import {
-  ApiEvent,
-  ApiMessageEvent,
-  ApiDeltaEvent,
-  chatMessageSchema,
-} from '@/lib/types';
-
-export const prepareApiSseMessage = (
-  event: ApiEvent,
-  data?: ApiMessageEvent | ApiDeltaEvent
-) => {
-  return `event: ${event}\ndata: ${JSON.stringify(data ?? {})}\n\n`;
-};
-
-export const parseSseString = (sseString: string) => {
-  const lines = sseString.split('\n');
-  const eventLine = lines[0].split(': ')[1];
-  const dataLine = lines[1].split(': ')[1];
-
-  return {
-    event: eventLine,
-    data: JSON.parse(dataLine) as ApiMessageEvent | ApiDeltaEvent | undefined,
-  };
-};
+import { ApiEvent, chatMessageSchema } from '@/lib/types';
+import { parseSseString, prepareApiSseMessage } from '@/lib/sse';
 
 export const dynamic = 'force-dynamic';
-
-const decoder = new TextDecoder('utf-8');
 
 type Params = {
   params: { threadId: string };
@@ -39,6 +15,7 @@ export const POST = async (request: NextRequest, { params }: Params) => {
 
   const body = await request.json();
   const parsedBody = chatMessageSchema.parse(body);
+  const decoder = new TextDecoder('utf-8');
   const encoder = new TextEncoder();
 
   return new Response(

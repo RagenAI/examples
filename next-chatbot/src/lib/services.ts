@@ -45,6 +45,13 @@ export const getMessageStream = async (id: ThreadDto['id'], data: ChatMessageDto
   //     body: JSON.stringify(data),
   //   }
   // );
+  // if (!apiStream.body) {
+  //   return;
+  // }
+
+  // const reader = apiStream.body
+  //   .pipeThrough(new TextDecoderStream())
+  //   .getReader();
 
   try {
     const result = await api.post(`/chat/${id}/stream`, data, {
