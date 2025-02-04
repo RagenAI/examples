@@ -2,8 +2,9 @@
 
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
+import { KeyboardEventHandler } from 'react';
 
-import { Textarea } from '@/components/ui/textarea';
+import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 
 import { AskQuestionDto, questionSchema } from './types';
@@ -30,10 +31,14 @@ export function QuestionForm({ onSubmit }: Props) {
     },
   });
 
+  const handleKeyDown: KeyboardEventHandler<HTMLInputElement> = (event) => {
+    if (event.code === 'Enter') {
+      form.trigger();
+    }
+  };
+
   const onFormSubmit: SubmitHandler<AskQuestionDto> = (data) => {
-    // Do something with the form values.
-    // ✅ This will be type-safe and validated.
-    console.log(data);
+    form.reset();
     onSubmit({ content: data.question });
   };
 
@@ -48,9 +53,11 @@ export function QuestionForm({ onSubmit }: Props) {
               <FormItem>
                 <FormLabel>Your question</FormLabel>
                 <FormControl>
-                  <Textarea
+                  <Input
                     autoFocus={true}
                     placeholder="Type your question here"
+                    onKeyDown={handleKeyDown}
+                    disabled={form.formState.isSubmitting}
                     {...field}
                   />
                 </FormControl>

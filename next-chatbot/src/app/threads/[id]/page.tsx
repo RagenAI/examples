@@ -7,7 +7,8 @@ type Props = {
   };
 };
 
-export default async function ThreadPage({ params: { id } }: Props) {
+export default async function ThreadPage({ params }: Props) {
+  const { id } = await params;
   const messages = await getThreadMessages(id);
 
   return <Assistant threadId={id} messages={messages} />;

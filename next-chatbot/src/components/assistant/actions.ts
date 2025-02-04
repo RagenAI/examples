@@ -1,7 +1,22 @@
-"use server";
+'use server';
 
-import { api, CreateMessageDto } from "@/lib/api";
+import { api } from '@/lib/api';
+import { CreateMessageDto, MessageDto, ThreadDto } from '@/lib/types';
 
-export const createMessage = async (data: CreateMessageDto) => {
-  return api.post("/chat/61404ba2-d3cb-491c-bdb8-5247b5997000", data);
+/**
+ * This function sends user message, adds to chat and returns assistant response
+ * @param threadId Thread['id']
+ * @param data CreateMessageDto
+ * @returns MessageDto
+ */
+export const createMessageAction = async (
+  threadId: ThreadDto['id'],
+  data: CreateMessageDto,
+) => {
+  try {
+    const message = await api.post<MessageDto>(`/chat/${threadId}`, data);
+    return message.data;
+  } catch {
+    console.log('Cannot create message');
+  }
 };

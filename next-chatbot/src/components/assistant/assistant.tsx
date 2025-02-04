@@ -1,10 +1,12 @@
 'use client';
 
-import { api } from '@/lib/api';
+import { useEffect, useId, useRef, useState } from 'react';
+import { v4 as uuidv4 } from 'uuid';
+
 import { MessagesList } from '../messages-list/messages-list';
 import { QuestionForm } from '../question-form/question-form';
-import { useEffect, useState } from 'react';
-import { MessageDto } from '@/lib/types';
+import { CreateMessageDto, MessageDto, MessageRole } from '@/lib/types';
+import { createMessageAction } from './actions';
 
 type Props = {
   threadId: string;
@@ -12,7 +14,9 @@ type Props = {
 };
 
 export function Assistant({ threadId, messages }: Props) {
+  const [isLoading, setIsLoading] = useState(false);
   const [chatMessages, setChatMessages] = useState<MessageDto[]>(messages);
+  const messagesEndDivRef = useRef<HTMLDivElement>(null);
 
   const connectToStream = () => {
     // const url = '';
@@ -45,6 +49,8 @@ export function Assistant({ threadId, messages }: Props) {
   };
 
   useEffect(() => {
+    scrollToBottom();
+
     const stream = connectToStream();
 
     return () => {
@@ -52,24 +58,41 @@ export function Assistant({ threadId, messages }: Props) {
     };
   }, []);
 
-  const handleCreateMessage = async (data: CreateMessageDto) => {
-    // FIXME: remove to backend
-    const response = await api.post(
-      '/chat/61404ba2-d3cb-491c-bdb8-5247b5997000',
-      data,
-    );
+  const scrollToBottom = () =>
+    messagesEndDivRef.current?.scrollIntoView({ behavior: 'smooth' });
 
-    // const response = await createMessage(data);
-    console.log({ response });
+  const handleCreateMessage = async (data: CreateMessageDto) => {
+    setIsLoading(true);
+    // this can be returned from API, simulate user message
+    const userMessage: MessageDto = {
+      id: uuidv4(),
+      content: data.content,
+      created_at: new Date().toISOString(),
+      role: MessageRole.USER,
+    };
+    setChatMessages((prevMessages) => [...prevMessages, userMessage]);
+    scrollToBottom();
+
+    const message = await createMessageAction(threadId, data);
+    if (message) {
+      console.log({ message });
+      setChatMessages((prevMessages) => [...prevMessages, message]);
+      scrollToBottom();
+    }
+    setIsLoading(false);
   };
 
   return (
     <>
       <div className="flex-1 overflow-y-auto mx-6">
         <MessagesList data={chatMessages} />
+        <div ref={messagesEndDivRef} />
       </div>
 
-      <div className="flex m-4 mx-6">
+      <div className="flex flex-col m-4 mx-6">
+        <div className="mb-2">
+          <p>{isLoading && 'Loading...'}</p>
+        </div>
         <QuestionForm onSubmit={handleCreateMessage} />
       </div>
     </>
