@@ -1,4 +1,5 @@
 import { Assistant } from '@/components/assistant';
+import { getThreadMessages } from '@/lib/services';
 
 type Props = {
   params: {
@@ -6,6 +7,8 @@ type Props = {
   };
 };
 
-export default function ThreadPage({ params: { id } }: Props) {
-  return <Assistant threadId={id} />;
+export default async function ThreadPage({ params: { id } }: Props) {
+  const messages = await getThreadMessages(id);
+
+  return <Assistant threadId={id} messages={messages} />;
 }

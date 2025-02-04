@@ -9,7 +9,7 @@ export function MessagesList({ data }: Props) {
   return (
     <div className="flex flex-col space-y-4 overflow-y-auto">
       {data.map((elem) => (
-        <Message key={elem.id} content={elem.content} />
+        <Message key={elem.id} message={elem} />
       ))}
     </div>
   );

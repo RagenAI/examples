@@ -5,10 +5,6 @@ export type ServerAction<T> =
     }
   | { success: false };
 
-export type CreateMessageDto = {
-  content: string;
-};
-
 export type ThreadDto = {
   id: string;
   title: string | null;
@@ -21,11 +17,22 @@ export enum ThreadSource {
   UI = 'UI',
 }
 
+export enum MessageRole {
+  USER = 'USER',
+  ASSISTANT = 'ASSISTANT',
+}
+
 export type CreateThreadDto = {
   id: ThreadDto['id'];
 };
 
 export type MessageDto = {
   id: string;
+  content: string;
+  role: MessageRole;
+  created_at: string;
+};
+
+export type CreateMessageDto = {
   content: string;
 };

@@ -1,3 +1,4 @@
+import { format } from 'date-fns';
 import {
   Card,
   CardContent,
@@ -5,21 +6,26 @@ import {
   CardFooter,
   CardHeader,
   CardTitle,
-} from "@/components/ui/card";
+} from '@/components/ui/card';
+import { MessageDto } from '@/lib/types';
 
-export function Message({ content }: { content: string }) {
+type Props = {
+  message: MessageDto;
+};
+
+export function Message({ message: { content, created_at, role } }: Props) {
   return (
     <Card>
       <CardHeader>
-        <CardTitle>Card Title</CardTitle>
-        <CardDescription>Card Description</CardDescription>
+        <CardTitle>{role}</CardTitle>
+        <CardDescription></CardDescription>
       </CardHeader>
       <CardContent>
         <p>{content}</p>
       </CardContent>
-      {/* <CardFooter>
-        <p>Card Footer</p>
-      </CardFooter> */}
+      <CardFooter>
+        <p>{format(created_at, 'dd.mm.yyyy HH:mm:ss')}</p>
+      </CardFooter>
     </Card>
   );
 }

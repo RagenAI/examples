@@ -8,15 +8,16 @@ import { MessageDto } from '@/lib/types';
 
 type Props = {
   threadId: string;
+  messages: MessageDto[]; // initial list of chat messages
 };
 
-export function Assistant({ threadId }: Props) {
-  const [messages, setMessage] = useState<MessageDto[]>([]);
+export function Assistant({ threadId, messages }: Props) {
+  const [chatMessages, setChatMessages] = useState<MessageDto[]>(messages);
 
   const connectToStream = () => {
     // const url = '';
 
-    const eventSource = new EventSource('http://localhost:3001/api/chat');
+    const eventSource = new EventSource('/api/chat');
 
     // init
     // message
@@ -27,9 +28,9 @@ export function Assistant({ threadId }: Props) {
     });
 
     eventSource.addEventListener('message', () => {
-      const eventMessage = JSON.parse(event.data);
-      console.log('eventMessage', eventMessage.type, eventMessage.payload);
-      setMessage((prevMessages) => [eventMessage.payload]);
+      // const eventMessage = JSON.parse(event.data);
+      // console.log('eventMessage', eventMessage.type, eventMessage.payload);
+      // setChatMessages((prevMessages) => [eventMessage.payload]);
     });
 
     eventSource.addEventListener('close', () => {
@@ -65,7 +66,7 @@ export function Assistant({ threadId }: Props) {
   return (
     <>
       <div className="flex-1 overflow-y-auto mx-6">
-        <MessagesList data={messages} />
+        <MessagesList data={chatMessages} />
       </div>
 
       <div className="flex m-4 mx-6">
