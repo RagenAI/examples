@@ -22,6 +22,11 @@ export const POST = async (request: NextRequest, { params }: Params) => {
       async start(controller) {
         const apiStream = await getMessageStream(threadId, parsedBody);
 
+        if (!apiStream) {
+          controller.close();
+          return;
+        }
+
         apiStream.on('data', (data: Buffer) => {
           // uncomment for
           // const message = parseSseString(decoder.decode(data)); // Decode the buffer to a string and then parse SSE event format to JSON
@@ -35,6 +40,11 @@ export const POST = async (request: NextRequest, { params }: Params) => {
 
         apiStream.on('end', () => {
           console.log('stream done');
+          controller.close();
+        });
+
+        apiStream.on('error', () => {
+          console.error('stream error');
           controller.close();
         });
       },
