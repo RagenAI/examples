@@ -56,7 +56,7 @@ export function Assistant({ threadId, messages }: Props) {
     const apiStream = await fetch(`/api/chat/${threadId}`, {
       method: 'POST',
       headers: {
-        'Content-Type': 'text/event-stream',
+        Accept: 'text/event-stream',
       },
       body: JSON.stringify(data),
     });
