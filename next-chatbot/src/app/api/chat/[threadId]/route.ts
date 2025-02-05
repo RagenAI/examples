@@ -1,8 +1,7 @@
 import { NextRequest } from 'next/server';
 
 import { getMessageStream } from '@/lib/services';
-import { ApiEvent, chatMessageSchema } from '@/lib/types';
-import { parseSseString, prepareApiSseMessage } from '@/lib/sse';
+import { chatMessageSchema } from '@/lib/types';
 
 export const dynamic = 'force-dynamic';
 
@@ -15,8 +14,8 @@ export const POST = async (request: NextRequest, { params }: Params) => {
 
   const body = await request.json();
   const parsedBody = chatMessageSchema.parse(body);
-  const decoder = new TextDecoder('utf-8');
-  const encoder = new TextEncoder();
+  // uncomment for debug
+  // const decoder = new TextDecoder('utf-8');
 
   return new Response(
     new ReadableStream({
@@ -24,15 +23,14 @@ export const POST = async (request: NextRequest, { params }: Params) => {
         const apiStream = await getMessageStream(threadId, parsedBody);
 
         apiStream.on('data', (data: Buffer) => {
-          const message = parseSseString(decoder.decode(data)); // Decode the buffer to a string and then parse SSE event format to JSON
-          const messageEvent = message.event as ApiEvent;
-          const messageData = message.data;
+          // uncomment for
+          // const message = parseSseString(decoder.decode(data)); // Decode the buffer to a string and then parse SSE event format to JSON
+          // const messageEvent = message.event as ApiEvent;
+          // const messageData = message.data;
+          // console.log(message); // Log the decoded message
 
           // it's proxy from Ragen API to frontend app to not expose API key
-          controller.enqueue(
-            encoder.encode(prepareApiSseMessage(messageEvent, messageData))
-          );
-          console.log(message); // Log the decoded message
+          controller.enqueue(data);
         });
 
         apiStream.on('end', () => {

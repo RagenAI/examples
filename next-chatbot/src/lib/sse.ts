@@ -12,6 +12,8 @@ export const parseSseString = (sseString: string) => {
   const eventLine = lines[0].split(': ')[1];
   const dataLine = lines[1].split(': ')[1];
 
+  console.log({ dataLine });
+
   return {
     event: eventLine,
     data: JSON.parse(dataLine) as ApiMessageEvent | ApiDeltaEvent | undefined,

@@ -69,7 +69,10 @@ export function Assistant({ threadId, messages }: Props) {
       if (done) break; // Exit the loop if the stream is done
 
       // Process the value (which is a string)
-      console.log(value); // You can handle the value as needed
+      // const message = parseSseString(decoder.decode(data)); // Decode the buffer to a string and then parse SSE event format to JSON
+      // const messageEvent = message.event as ApiEvent;
+      // const messageData = message.data;
+      console.log('on frontend: ', value); // You can handle the value as needed
     }
 
     setIsLoading(false);
