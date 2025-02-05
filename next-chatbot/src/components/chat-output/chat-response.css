@@ -1,0 +1,144 @@
+.chat-response {
+  font-weight: 400;
+  text-align: left;
+  align-self: flex-start;
+  font-size: 1rem;
+  min-height: 2.5rem;
+  line-height: 1.75rem;
+}
+
+.chat-response h3 {
+  font-size: 16px;
+  margin: 12px 0;
+}
+
+.chat-response h4 {
+  font-size: 16px;
+}
+
+.chat-response p {
+  margin: 14px 0;
+}
+
+.chat-response ul {
+  margin-left: 16px;
+  list-style-type: disc;
+}
+
+.chat-response ul li {
+  margin: 6px 0;
+}
+
+.chat-response ol {
+  margin-left: 16px;
+  list-style-type: decimal;
+}
+
+/* CODE WRAPPER/ */
+pre.hljs {
+  background-color: #11212d;
+  color: #abb2bf;
+  padding: 1rem;
+  border-radius: 8px;
+  border: 1px solid #444;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+  overflow-x: auto;
+  font-size: 0.9rem;
+}
+
+code.hljs {
+  font-family: 'Fira Code', monospace;
+}
+/* CODE WRAPPER/ */
+
+/* LIGHT MODE TABLES */
+.chat-response table {
+  border-collapse: collapse;
+  width: 100%;
+  margin: 1rem 0;
+  background-color: #f9fafb;
+  border: 1px solid #e5e7eb;
+}
+
+.chat-response th,
+.chat-response td {
+  border: 1px solid #e5e7eb;
+  padding: 8px;
+  text-align: left;
+  color: #374151;
+}
+
+.chat-response th {
+  background-color: #f3f4f6;
+  font-weight: 600;
+  color: #111827;
+}
+
+.chat-response tr:nth-child(even) {
+  background-color: #f3f4f6;
+}
+
+.chat-response tr:hover {
+  background-color: #e5e7eb;
+  cursor: pointer;
+}
+
+.chat-response table {
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.chat-response td:first-child {
+  border-left: none;
+}
+
+.chat-response td:last-child {
+  border-right: none;
+}
+/* LIGHT MODE TABLES */
+
+/* DARK MODE TABLES */
+html.dark .chat-response table {
+  border-collapse: collapse;
+  width: 100%;
+  margin: 1rem 0;
+  background-color: #2b3740;
+  border: 1px solid #20303c;
+}
+
+html.dark .chat-response th,
+html.dark .chat-response td {
+  border: 1px solid #20303c;
+  padding: 8px;
+  text-align: left;
+  color: #ffffff;
+}
+
+html.dark .chat-response th {
+  background-color: #253745;
+  font-weight: 600;
+  color: #ffffff;
+}
+
+html.dark .chat-response tr:nth-child(even) {
+  background-color: #2b3740;
+}
+
+html.dark .chat-response tr:hover {
+  background-color: #20303c;
+  cursor: pointer;
+}
+
+.chat-response table {
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+html.dark .chat-response td:first-child {
+  border-left: none;
+}
+
+html.dark .chat-response td:last-child {
+  border-right: none;
+}
+/* DARK MODE TABLES */

@@ -6,7 +6,7 @@ import { chatMessageSchema } from '@/lib/types';
 export const dynamic = 'force-dynamic';
 
 type Params = {
-  params: { threadId: string };
+  params: Promise<{ threadId: string }>;
 };
 
 export const POST = async (request: NextRequest, { params }: Params) => {

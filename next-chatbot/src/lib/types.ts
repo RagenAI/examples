@@ -42,7 +42,7 @@ export const chatMessageSchema = z.object({
 
 export type ChatMessageDto = z.infer<typeof chatMessageSchema>;
 
-export type ApiEvent = 'init' | 'delta' | 'message' | 'end';
+export type ApiEvent = 'init' | 'delta' | 'response' | 'end';
 
 export type ApiMessageEvent = {
   id: string;
