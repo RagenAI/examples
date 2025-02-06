@@ -22,9 +22,8 @@ type Props = {
 
 export function Assistant({ threadId, messages }: Props) {
   const [isLoading, setIsLoading] = useState(false);
-  const [apiEvent, setApiEvent] = useState<ApiEvent>('');
+  const [apiEvent, setApiEvent] = useState<ApiEvent | undefined>();
   const [streamedMessage, setStreamedMessage] = useState('');
-  // const [streamingStatus, setStreamingStatus] = useState<ApiEvent>('');
   const [chatMessages, setChatMessages] = useState<MessageDto[]>(messages);
   const messagesEndDivRef = useRef<HTMLDivElement>(null);
 

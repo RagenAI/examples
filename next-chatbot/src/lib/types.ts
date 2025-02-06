@@ -41,7 +41,7 @@ export const chatMessageSchema = z.object({
 
 export type ChatMessageDto = z.infer<typeof chatMessageSchema>;
 
-type ApiEvent =
+export type ApiEvent =
   | 'init'
   | 'delta'
   | 'find_thread'

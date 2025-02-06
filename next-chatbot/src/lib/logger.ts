@@ -1,11 +1,11 @@
-import pino from "pino";
-import pretty from "pino-pretty";
+import pino from 'pino';
+import pretty from 'pino-pretty';
 
 const streams = [];
 
 // Ensure this file only runs on the server
-if (typeof window !== "undefined") {
-  throw new Error("This module should only be used on the server side");
+if (typeof window !== 'undefined') {
+  throw new Error('This module should only be used on the server side');
 }
 
 streams.push({
@@ -16,7 +16,7 @@ streams.push({
 
 const logger = pino(
   {
-    level: "debug",
+    level: 'debug',
     base: {
       pid: process.pid,
       hostname: process.env.HOSTNAME,
@@ -24,7 +24,5 @@ const logger = pino(
   },
   streams.length ? pino.multistream(streams) : pino.destination()
 );
-
-logger.info("Server logger initialized");
 
 export { logger };
