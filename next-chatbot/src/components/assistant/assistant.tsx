@@ -118,8 +118,12 @@ export function Assistant({ threadId, messages }: Props) {
       <div className="flex flex-col m-4 mx-6">
         <div className="mb-2">
           <p>
-            {isLoading &&
-              `Loading (api: event: ${JSON.stringify(apiEvent)})...`}
+            {isLoading && (
+              <span>
+                Loading...{' '}
+                <pre>debug: API Event: {JSON.stringify(apiEvent)}</pre>
+              </span>
+            )}
           </p>
         </div>
         <QuestionForm onSubmit={handleCreateMessage} />
