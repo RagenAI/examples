@@ -22,6 +22,7 @@ type Props = {
 
 export function Assistant({ threadId, messages }: Props) {
   const [isLoading, setIsLoading] = useState(false);
+  const [apiEvent, setApiEvent] = useState<ApiEvent>('');
   const [streamedMessage, setStreamedMessage] = useState('');
   // const [streamingStatus, setStreamingStatus] = useState<ApiEvent>('');
   const [chatMessages, setChatMessages] = useState<MessageDto[]>(messages);
@@ -86,6 +87,8 @@ export function Assistant({ threadId, messages }: Props) {
       const messageEvent = message.event as ApiEvent;
       const messageData = message.data;
 
+      setApiEvent(messageEvent);
+
       if (messageEvent === 'delta' && messageData?.content) {
         setStreamedMessage(
           (prevMessage) => `${prevMessage}${messageData.content}`
@@ -114,7 +117,10 @@ export function Assistant({ threadId, messages }: Props) {
 
       <div className="flex flex-col m-4 mx-6">
         <div className="mb-2">
-          <p>{isLoading && 'Loading...'}</p>
+          <p>
+            {isLoading &&
+              `Loading (api: event: ${JSON.stringify(apiEvent)})...`}
+          </p>
         </div>
         <QuestionForm onSubmit={handleCreateMessage} />
       </div>
