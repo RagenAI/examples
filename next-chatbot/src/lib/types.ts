@@ -35,14 +35,28 @@ export type MessageDto = {
   created_at: string;
 };
 
-
 export const chatMessageSchema = z.object({
   content: z.string().min(3).max(50),
 });
 
 export type ChatMessageDto = z.infer<typeof chatMessageSchema>;
 
-export type ApiEvent = 'init' | 'delta' | 'response' | 'end';
+type ApiEvent =
+  | 'init'
+  | 'delta'
+  | 'find_thread'
+  | 'thread_found'
+  | 'save_user_message'
+  | 'user_message_saved'
+  | 'init_lmm'
+  | 'get_thread_messages'
+  | 'add_thread_messages_to_lmm'
+  | 'start_lmm'
+  | 'lmm_completed'
+  | 'save_assistant_response'
+  | 'assistant_response_saved'
+  | 'final_response'
+  | 'close';
 
 export type ApiMessageEvent = {
   id: string;

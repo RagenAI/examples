@@ -91,7 +91,7 @@ export function Assistant({ threadId, messages }: Props) {
           (prevMessage) => `${prevMessage}${messageData.content}`
         );
         scrollToBottom();
-      } else if (messageEvent == 'response') {
+      } else if (messageEvent == 'final_response') {
         setStreamedMessage('');
         setChatMessages((prevMessages) => [
           ...prevMessages,
