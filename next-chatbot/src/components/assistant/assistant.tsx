@@ -53,6 +53,25 @@ export function Assistant({ threadId, messages }: Props) {
     //   scrollToBottom();
     // }
 
+    /**
+     * Axios version:
+     *
+     * const apiStream = await axios.post(streamUrl, data, {
+        responseType: 'stream',
+        adapter: 'fetch',
+        headers: {
+          Accept: 'text/event-stream',
+        },
+      });
+
+      if (!apiStream.data) {
+        return;
+      }
+
+      const reader = apiStream.data
+        .pipeThrough(new TextDecoderStream())
+        .getReader();
+     */
     const apiStream = await fetch(`/api/chat/${threadId}`, {
       method: 'POST',
       headers: {
@@ -68,6 +87,8 @@ export function Assistant({ threadId, messages }: Props) {
       .pipeThrough(new TextDecoderStream())
       .getReader();
 
+    let buffer = ''; // Initialize a buffer to accumulate chunks
+
     // Read the stream
     while (true) {
       const { done, value } = await reader.read();
@@ -75,31 +96,39 @@ export function Assistant({ threadId, messages }: Props) {
         break; // Exit the loop if the stream is done
       }
 
-      // Process the value (which is a string)
-      // const message = parseSseString(decoder.decode(data)); // Decode the buffer to a string and then parse SSE event format to JSON
-      // const messageEvent = message.event as ApiEvent;
-      // const messageData = message.data;
+      buffer += value;
 
-      const message = parseSseString(value);
-      // You can see message format in browser console
-      console.log('on frontend: ', message);
-      const messageEvent = message.event as ApiEvent;
-      const messageData = message.data;
+      // Process the buffer to extract complete messages
+      let messages = buffer.split('\n\n'); // Assuming messages are separated by double newlines
+      buffer = messages.pop() || ''; // Keep the last incomplete message in the buffer
 
-      setApiEvent(messageEvent);
+      for (const msg of messages) {
+        // Process the value (which is a string)
+        // const message = parseSseString(decoder.decode(data)); // Decode the buffer to a string and then parse SSE event format to JSON
+        // const messageEvent = message.event as ApiEvent;
+        // const messageData = message.data;
 
-      if (messageEvent === 'delta' && messageData?.content) {
-        setStreamedMessage(
-          (prevMessage) => `${prevMessage}${messageData.content}`
-        );
-        scrollToBottom();
-      } else if (messageEvent == 'final_response') {
-        setStreamedMessage('');
-        setChatMessages((prevMessages) => [
-          ...prevMessages,
-          messageData as ApiMessageEvent,
-        ]);
-        scrollToBottom();
+        const message = parseSseString(msg);
+        // You can see message format in browser console
+        console.log('on frontend: ', message);
+        const messageEvent = message.event as ApiEvent;
+        const messageData = message.data;
+
+        setApiEvent(messageEvent);
+
+        if (messageEvent === 'delta' && messageData?.content) {
+          setStreamedMessage(
+            (prevMessage) => `${prevMessage}${messageData.content}`
+          );
+          scrollToBottom();
+        } else if (messageEvent == 'final_response') {
+          setStreamedMessage('');
+          setChatMessages((prevMessages) => [
+            ...prevMessages,
+            messageData as ApiMessageEvent,
+          ]);
+          scrollToBottom();
+        }
       }
     }
 
